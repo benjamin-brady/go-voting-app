@@ -1,0 +1,17 @@
+version: '3'
+services:
+  voting-redis:
+    image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+    container_name: voting-redis
+    environment:
+      REDIS_PASSWORD: "rZZiNP4T5tzW"
+    ports:
+        - "6379:6379"
+  go-voting-app:
+    image: go-voting-app
+    container_name: go-voting-app
+    environment:
+      REDIS_PASSWORD: "rZZiNP4T5tzW"
+      REDIS_HOST: "voting-redis"
+    ports:
+        - "8080:8080"
