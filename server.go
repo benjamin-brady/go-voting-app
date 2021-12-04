@@ -35,7 +35,7 @@ func main() {
 	})
 
 	r.POST("/vote/:animal", func(c *gin.Context) {
-		animal := c.Param("name")
+		animal := c.Param("animal")
 		key := "votes." + animal
 		incrementVotes(ctx, rdb, key)
 	})

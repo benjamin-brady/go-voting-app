@@ -9,8 +9,8 @@ GET http://localhost:8080/votes HTTP/1.1
 
 ###
 
-POST http://localhost:8080/vote/cat HTTP/1.1
+POST http://localhost:8080/vote/cats HTTP/1.1
 
 ###
 
-POST http://localhost:8080/vote/dog HTTP/1.1
+POST http://localhost:8080/vote/dogs HTTP/1.1
