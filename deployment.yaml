@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voting-redis
+spec:
+  selector:
+    matchLabels:
+      app: voting-redis
+  template:
+    metadata:
+      labels:
+        app: voting-redis
+    spec:
+      containers:
+      - name: voting-redis
+        env:
+          - name: REDIS_PASSWORD
+            value: "rZZiNP4T5tzW"  # TODO replace with k8s Secret
+        image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voting-redis
+spec:
+  selector:
+    app: voting-redis
+  ports:
+  - port: 6379
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-voting-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: go-voting-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: go-voting-app
+    spec:
+      containers:
+      - name: go-voting-app
+        image: bensacr.azurecr.io/go-voting-app:latest
+        env:
+          - name: REDIS_PASSWORD
+            value: "rZZiNP4T5tzW"
+          - name: REDIS_HOST
+            value: voting-redis
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-voting-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: go-voting-app
+  ports:
+  - port: 80
+    targetPort: 8080
+
