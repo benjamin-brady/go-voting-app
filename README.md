@@ -34,7 +34,7 @@ Store the result somewhere as we'll need `appId` and `password` later for `clien
 
 Create the storage backend for terraform state.
 
-    cd ./IaC/create-remote-storage
+    cd ./infra/create-remote-storage
     terraform init
     terrmaform apply
 
@@ -49,7 +49,7 @@ Initialize terraform pointed to our new storage backend.
     ...
     You may now begin working with Terraform. 
 
-Change to the IaC directory
+Change to the infra directory
 
     cd ..
 
