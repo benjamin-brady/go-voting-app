@@ -8,6 +8,9 @@ COPY go.sum ./
 RUN go mod download
 
 COPY *.go ./
+COPY *.html ./
+ADD static ./static
+
 RUN go build -o /go-voting-app
 
 EXPOSE 8080

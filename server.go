@@ -25,6 +25,10 @@ func main() {
 
 	r := gin.Default()
 
+	r.StaticFile("/", "./index.html")
+
+	r.Static("/static", "./static")
+
 	r.GET("/votes", func(c *gin.Context) {
 		catVotes := getVotes(ctx, rdb, "votes.cats")
 		dogVotes := getVotes(ctx, rdb, "votes.dogs")
@@ -40,6 +44,11 @@ func main() {
 		incrementVotes(ctx, rdb, key)
 	})
 
+	r.POST("/reset_votes", func(c *gin.Context) {
+		setVotes(ctx, rdb, "votes.cats", 0)
+		setVotes(ctx, rdb, "votes.dogs", 0)
+	})
+
 	r.GET("/status", func(c *gin.Context) {
 		c.String(http.StatusOK, "OK")
 	})
@@ -49,7 +58,7 @@ func main() {
 
 func getVotes(ctx context.Context, rdb *redis.Client, key string) int {
 	val, err := rdb.Get(ctx, key).Result()
-	fmt.Printf("get", key, val)
+	fmt.Printf("Get", key, val)
 	if err != nil {
 		fmt.Printf(err.Error())
 	}
@@ -63,4 +72,12 @@ func incrementVotes(ctx context.Context, rdb *redis.Client, key string) {
 		fmt.Printf(err.Error())
 	}
 	fmt.Printf("Incremented", key, "to", res)
+}
+
+func setVotes(ctx context.Context, rdb *redis.Client, key string, val int) {
+	res, err := rdb.Set(ctx, key, val, 0).Result()
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+	fmt.Printf("Set", key, "to", res)
 }

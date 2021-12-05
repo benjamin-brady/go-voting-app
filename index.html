@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/default.css">
+    <title>Go Voting App</title>
+
+    <script language="JavaScript">
+        function updateVotes() {
+            fetch("/votes", { 
+                method: "GET",
+            })
+            .then(res =>  res.json())
+            .then (function (data) {
+                document.getElementById("catVotes").innerHTML = data.cats;
+                document.getElementById("dogVotes").innerHTML = data.dogs;
+            });
+        }
+        function vote(animal){
+            fetch("/vote/"+animal, { 
+                method: "POST",
+            }).then(res => updateVotes());
+        }
+        function resetVotes(){
+            fetch("/reset_votes/", { 
+                method: "POST",
+            }).then(res => updateVotes());
+        }
+
+        document.addEventListener("DOMContentLoaded", function(){
+            updateVotes();
+        });
+    </script>
+
+</head>
+<body>
+    <div id="container">
+        <div id="logo">Go Voting App</div>
+        <div id="space"></div>
+        <div id="form">
+        <button name="vote" value="cats" onclick="vote('cats')" class="button button1">Cats 😸</button>
+        <button name="vote" value="dogs" onclick="vote('dogs')" class="button button2">Dogs 🐶</button>
+        <button name="vote" value="reset" onclick="resetVotes()" class="button button3">Reset</button>
+        <div id="space"></div>
+        <div id="space"></div>
+        <div id="results"> Cats - <span id="catVotes">-</span> | Dogs - <span id="dogVotes">-</span> </div> 
+        <button name="vote" value="reset" onclick="updateVotes()" class="button button3">Refresh</button>
+        </div>
+    </div>     
+</body>
+</html>
