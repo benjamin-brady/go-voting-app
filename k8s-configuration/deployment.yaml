@@ -15,7 +15,10 @@ spec:
       - name: voting-redis
         env:
           - name: REDIS_PASSWORD
-            value: "rZZiNP4T5tzW"  # TODO replace with k8s Secret
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: redis-password 
         image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
         resources:
           limits:
@@ -60,7 +63,10 @@ spec:
         image: bensacr.azurecr.io/go-voting-app:latest
         env:
           - name: REDIS_PASSWORD
-            value: "rZZiNP4T5tzW"
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: redis-password 
           - name: REDIS_HOST
             value: voting-redis
         resources:

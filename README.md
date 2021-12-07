@@ -130,6 +130,13 @@ az acr repository list --name <acrName> --output table
 ```
 
 ## Deploy to Kubernetes
+Run these commands from the `k8s-configuration` directory.
+
+Create a secret for the redis password. Add your base64 encoded password to `secrets.template.yaml`, rename the file to `secrets.yaml` and apply changes to the cluster.
+
+    kubectl apply -f ./secrets.yaml
+
+
 Create a new k8s deployment
 
     $ kubectl apply -f .\deployment.yaml
